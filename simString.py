@@ -1,7 +1,11 @@
+import pickle
 import logging
 from nltk.corpus import stopwords
 from gensim import corpora, models, similarities
 from cleanSent import cleanSent
+
+test_reviewSent_score = []
+#pickle.dump (test_reviewSent_score, open ( "test_reviewSent_score.p", "wb") )
 
 logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 
@@ -31,8 +35,20 @@ tfidf = models.TfidfModel(corpus)
 index = similarities.SparseMatrixSimilarity(tfidf[corpus], num_features=len(dictionary))
 
 #4. for new string, compute:
+sortedSentenceList1 = pickle.load ( open ( "judgerTestSet.p", "rb") )
+test_size = 2000
+sortedSentenceList = sortedSentenceList1[:test_size]
 # for every string in judgeTestSet
-new_sent = cleanSent("Human computer interaction")#
-new_vec = dictionary.doc2bow(new_sent) #new_sent.lower().split())
-sims = index[tfidf[new_vec]] # sim array to each node
-print(sum(sims) / len(sims)) # array
+for k in range(0, test_size):
+	new_sent = cleanSent(sortedSentenceList[k][2])#
+	new_vec = dictionary.doc2bow(new_sent) #new_sent.lower().split())
+	sims = index[tfidf[new_vec]] # sim array to each node
+	#print(sum(sims) / len(sims)) # array
+	test_reviewSent_score.append(sum(sims) / len(sims))
+
+print test_reviewSent_score
+#pickle.dump (test_reviewSent_score, open ( "test_reviewSent_score.p", "wb") )
+#need: reviewid, sentence id? according to judgerTestSet, and score
+    # sortedSentenceList1 = pickle.load ( open ( "judgerTestSet.p", "rb") )
+    # sortedSentenceList = sortedSentenceList1[:2000]
+    # create a list of score representing the score of each sentence(same order). write to file
