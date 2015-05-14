@@ -1,7 +1,7 @@
 import logging
 from nltk.corpus import stopwords
 from gensim import corpora, models, similarities
-import cleanSent
+from cleanSent import cleanSent
 
 logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 
@@ -33,6 +33,6 @@ index = similarities.SparseMatrixSimilarity(tfidf[corpus], num_features=len(dict
 #4. for new string, compute:
 # for every string in judgeTestSet
 new_sent = cleanSent("Human computer interaction")#
-new_vec = dictionary.doc2bow(new_sent.lower().split())
+new_vec = dictionary.doc2bow(new_sent) #new_sent.lower().split())
 sims = index[tfidf[new_vec]] # sim array to each node
 print(list(enumerate(sims))) # array
