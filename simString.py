@@ -40,15 +40,15 @@ test_size = 2000
 sortedSentenceList = sortedSentenceList1[:test_size]
 # for every string in judgeTestSet
 for k in range(0, test_size):
-	new_sent = cleanSent(sortedSentenceList[k][2])#
-	new_vec = dictionary.doc2bow(new_sent) #new_sent.lower().split())
-	sims = index[tfidf[new_vec]] # sim array to each node
-	#print(sum(sims) / len(sims)) # array
-    score = sum(sims) / len(sims)
-	test_reviewSent_score.append(str(score) + "\n")
+    new_sent = cleanSent(sortedSentenceList[k][2])#
+    new_vec = dictionary.doc2bow(new_sent) #new_sent.lower().split())
+    sims = index[tfidf[new_vec]] # sim array to each node
+    #print(sum(sims) / len(sims)) # array
+    score = sum(sims)/len(sims)
+    test_reviewSent_score.append(score)
 
 outfile = open('simResult', 'w')
-outfile.write(test_reviewSent_score)
+outfile.write(str(test_reviewSent_score))
 outfile.close()
 #print test_reviewSent_score
 #pickle.dump (test_reviewSent_score, open ( "test_reviewSent_score.p", "wb") )
