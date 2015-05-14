@@ -10,7 +10,7 @@ test_reviewSent_score = []
 logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 
 #1. Create a dictionary of raw data without loading all texts into memory: (only has useful words)
-dictionary = corpora.Dictionary(line.lower().split() for line in open('mycorpus.txt'))
+dictionary = corpora.Dictionary(line.lower().split() for line in pickle.load(open("tipData.p","rb")))
 # remove stop words and words that appear only once
 stoplist = set(stopwords.words('english'))
 stop_ids = [dictionary.token2id[stopword] for stopword in stoplist
@@ -23,7 +23,7 @@ dictionary.save('tip.dict') # store the dictionary, for future reference
 #2. Convert the training corpus to vector space: (based on raw data, but projected onto dictionary, only useful words)
 class MyCorpus(object):
     def __iter__(self):
-        for line in open('mycorpus.txt'):
+        for line in pickle.load(open("tipData.p","rb")):
             yield dictionary.doc2bow(line.lower().split())
 
 corpus_memory_friendly = MyCorpus() # doesn't load the corpus into memory.
@@ -44,9 +44,13 @@ for k in range(0, test_size):
 	new_vec = dictionary.doc2bow(new_sent) #new_sent.lower().split())
 	sims = index[tfidf[new_vec]] # sim array to each node
 	#print(sum(sims) / len(sims)) # array
-	test_reviewSent_score.append(sum(sims) / len(sims))
+    score = sum(sims) / len(sims)
+	test_reviewSent_score.append(str(score) + "\n")
 
-print test_reviewSent_score
+outfile = open('simResult', 'w')
+outfile.write(test_reviewSent_score)
+outfile.close()
+#print test_reviewSent_score
 #pickle.dump (test_reviewSent_score, open ( "test_reviewSent_score.p", "wb") )
 #need: reviewid, sentence id? according to judgerTestSet, and score
     # sortedSentenceList1 = pickle.load ( open ( "judgerTestSet.p", "rb") )
