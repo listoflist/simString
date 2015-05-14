@@ -35,4 +35,4 @@ index = similarities.SparseMatrixSimilarity(tfidf[corpus], num_features=len(dict
 new_sent = cleanSent("Human computer interaction")#
 new_vec = dictionary.doc2bow(new_sent) #new_sent.lower().split())
 sims = index[tfidf[new_vec]] # sim array to each node
-print(list(enumerate(sims))) # array
+print(sum(sims) / len(sims)) # array
